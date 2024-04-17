@@ -42,41 +42,43 @@
 
 #include <limits.h>
 
-extern int udp_mode;		/* true if we need a UDP socket */
-extern int ip_mode;		/* true if we need the raw IP socket */
-extern unsigned short my_udp;	/* the UDP port to use (network byte order) */
-extern char ttydevice[PATH_MAX];	/* the tty device for serial comms */
-extern int ttyspeed;		/* The baud rate on the tty device */
-extern unsigned char mycallsign[7];	/* My callsign, shifted ASCII with SSID */
-extern unsigned char mycallsign2[7];	/* My seconds port callsign, shifted ASCII with SSID */
-extern unsigned char myalias[7];	/* An alias to use */
-extern unsigned char myalias2[7];	/* An alias for second port */
-extern char bc_text[128];	/* The text for beacon messages */
-extern int bc_interval;		/* The interval, in seconds, between beacons */
-extern int bc_every;		/* true=every, false=after */
-extern int digi;		/* True if we are connected to a TNC */
-extern int loglevel;		/* Verbosity level */
+extern int udp_mode;              /* true if we need a UDP socket */
+extern int ip_mode;               /* true if we need the raw IP socket */
+extern unsigned short my_udp;     /* the UDP port to use (network byte order) */
+extern char ttydevice[PATH_MAX];  /* the tty device for serial comms */
+extern char ptysymlink[PATH_MAX]; /* path to pty symlink */
+extern int ttyspeed;              /* The baud rate on the tty device */
+extern unsigned char mycallsign[7]; /* My callsign, shifted ASCII with SSID */
+extern unsigned char
+    mycallsign2[7]; /* My seconds port callsign, shifted ASCII with SSID */
+extern unsigned char myalias[7];  /* An alias to use */
+extern unsigned char myalias2[7]; /* An alias for second port */
+extern char bc_text[128];         /* The text for beacon messages */
+extern int bc_interval; /* The interval, in seconds, between beacons */
+extern int bc_every;    /* true=every, false=after */
+extern int digi;        /* True if we are connected to a TNC */
+extern int loglevel;    /* Verbosity level */
 /* addition for dual port flag */
 extern int dual_port;
 
 struct ax25ipd_stats {
-	int kiss_in;            /* # packets received */
-	int kiss_toobig;        /* packet too large */
-	int kiss_badtype;       /* control byte non-zero */
-	int kiss_out;           /* # packets sent */
-	int kiss_beacon_outs;   /* # of beacons sent */
-	int kiss_tooshort;      /* packet too short to be a valid frame */
-	int kiss_not_for_me;    /* packet not for me (in digi mode) */
-	int kiss_i_am_dest;     /* I am destination (in digi mode) */
-	int kiss_no_ip_addr;    /* Couldn't find an IP addr for this call */
-	int udp_in;             /* # packets received */
-	int udp_out;            /* # packets sent */
-	int ip_in;              /* # packets received */
-	int ip_out;             /* # packets sent */
-	int ip_failed_crc;      /* from ip, but failed CRC check */
-	int ip_tooshort;        /* packet too short to be a valid frame */
-	int ip_not_for_me;      /* packet not for me (in digi mode) */
-	int ip_i_am_dest;       /* I am destination (in digi mode) */
+  int kiss_in;          /* # packets received */
+  int kiss_toobig;      /* packet too large */
+  int kiss_badtype;     /* control byte non-zero */
+  int kiss_out;         /* # packets sent */
+  int kiss_beacon_outs; /* # of beacons sent */
+  int kiss_tooshort;    /* packet too short to be a valid frame */
+  int kiss_not_for_me;  /* packet not for me (in digi mode) */
+  int kiss_i_am_dest;   /* I am destination (in digi mode) */
+  int kiss_no_ip_addr;  /* Couldn't find an IP addr for this call */
+  int udp_in;           /* # packets received */
+  int udp_out;          /* # packets sent */
+  int ip_in;            /* # packets received */
+  int ip_out;           /* # packets sent */
+  int ip_failed_crc;    /* from ip, but failed CRC check */
+  int ip_tooshort;      /* packet too short to be a valid frame */
+  int ip_not_for_me;    /* packet not for me (in digi mode) */
+  int ip_i_am_dest;     /* I am destination (in digi mode) */
 };
 
 extern struct ax25ipd_stats stats;
@@ -90,8 +92,8 @@ extern void LOGLn(int level, const char *str, ...);
 #define LOGL3(arg...) LOGLn(3, ##arg)
 #define LOGL4(arg...) LOGLn(4, ##arg)
 
-#define	AXRT_BCAST	1
-#define	AXRT_DEFAULT	2
+#define AXRT_BCAST 1
+#define AXRT_DEFAULT 2
 
 /* start external prototypes */
 /* end external prototypes */

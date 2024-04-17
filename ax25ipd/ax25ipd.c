@@ -31,6 +31,7 @@ int udp_mode;			/* true if we need a UDP socket */
 int ip_mode;			/* true if we need the raw IP socket */
 unsigned short my_udp;		/* the UDP port to use (network byte order) */
 char ttydevice[PATH_MAX];	/* the tty device for serial comms */
+char ptysymlink[PATH_MAX];  /* path to pty symlink */
 int ttyspeed;			/* The baud rate on the tty device */
 unsigned char mycallsign[7];	/* My callsign, shifted ASCII with SSID */
 unsigned char mycallsign2[7];	/* My seconds port callsign, shifted ASCII with SSID */
@@ -53,6 +54,7 @@ static int opt_nofork;
 static int opt_help;
 static char opt_configfile[PATH_MAX];
 static char opt_ttydevice[PATH_MAX];
+static char opt_ptysymlink[PATH_MAX];
 
 static struct option options[] = {
 	{"version", 0, NULL, 'v'},
@@ -60,6 +62,7 @@ static struct option options[] = {
 	{"help", 0, NULL, 'h'},
 	{"configfile", 1, NULL, 'c'},
 	{"ttydevice", 1, NULL, 'd'},
+	{"symlink-pty", 1, NULL, 's'},
 	{"nofork", 0, NULL, 'f'},
 	{NULL, 0, NULL, 0}
 };
@@ -151,6 +154,7 @@ int main(int argc, char **argv)
 
 	*opt_configfile = 0;
 	*opt_ttydevice = 0;
+	*opt_ptysymlink = 0;
 
 	/* set up the handler for statistics reporting */
 	signal(SIGUSR1, usr1_handler);
@@ -160,7 +164,7 @@ int main(int argc, char **argv)
 	while (1) {
 		int c;
 
-		c = getopt_long(argc, argv, "c:d:fhl:v", options, NULL);
+		c = getopt_long(argc, argv, "c:d:fhl:vs:", options, NULL);
 		if (c == -1)
 			break;
 
@@ -172,6 +176,10 @@ int main(int argc, char **argv)
 		case 'd':
 			strncpy(opt_ttydevice, optarg, sizeof(opt_ttydevice)-1);
 			opt_ttydevice[sizeof(opt_ttydevice)-1] = 0;
+			break;
+		case 's':
+			strncpy(opt_ptysymlink, optarg, sizeof(opt_ptysymlink)-1);
+			opt_ptysymlink[sizeof(opt_ptysymlink)-1] = 0;
 			break;
 		case 'f':
 			opt_nofork = 1;
@@ -215,6 +223,8 @@ int main(int argc, char **argv)
 		printf
 		    ("  --ttydevice TTYDEV, -d TTYDEV Set device parameter to TTYDEV\n");
 		printf
+		    ("  --symlink-pty PATH, -s PATH   Create symlink to allocated PTY at PATH\n");
+		printf
 		    ("  --nofork, -f                  Do not put daemon in background\n");
 		exit(0);
 	}
@@ -232,6 +242,11 @@ int main(int argc, char **argv)
 	if (opt_ttydevice[0] != '\0') {
 		strncpy(ttydevice, opt_ttydevice, sizeof(ttydevice)-1);
 		ttydevice[sizeof(ttydevice)-1] = '\0';
+	}
+
+	if (opt_ptysymlink[0] != '\0') {
+		strncpy(ptysymlink, opt_ptysymlink, sizeof(ptysymlink)-1);
+		ptysymlink[sizeof(ptysymlink)-1] = '\0';
 	}
 
 	/* print the current config and route info */

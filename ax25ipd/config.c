@@ -35,6 +35,7 @@ void config_init(void)
 	int i;
 
 	*ttydevice = '\0';
+	*ptysymlink = '\0';
 	for (i = 0; i < 7; i++)
 		mycallsign[i] = '\0';
 	for (i = 0; i < 7; i++)
@@ -222,6 +223,20 @@ int parse_line(char *buf)
 			return -1;
 		strncpy(ttydevice, q, sizeof(ttydevice)-1);
 		ttydevice[sizeof(ttydevice)-1] = 0;
+		return 0;
+
+	} else if (strcmp(p, "symlink-pty") == 0) {
+		/* already set? i.e. with commandline option, which overwrites
+		 * the preconfigured setting. useful for systems with unix98
+		 * style pty's
+		 */
+		if (*ptysymlink)
+			return 0;
+		q = strtok(NULL, " \t\n\r");
+		if (q == NULL)
+			return -1;
+		strncpy(ptysymlink, q, sizeof(ptysymlink)-1);
+		ptysymlink[sizeof(ptysymlink)-1] = 0;
 		return 0;
 
 	} else if (strcmp(p, "mode") == 0) {
